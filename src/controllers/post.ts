@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Post from "../models/post";
 
 const PostController = {
   New: async (req: Request, res: Response) => {
