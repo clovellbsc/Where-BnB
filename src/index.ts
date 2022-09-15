@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import mongoose from "mongoose";
+import postRouter from "./routes/post";
 
 dotenv.config();
 
@@ -30,6 +31,8 @@ const uri: string = process.env.ATLAS_URI;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+app.use("/post", postRouter);
 
 mongoose
   .connect(uri)
