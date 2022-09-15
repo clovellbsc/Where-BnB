@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -17,6 +18,11 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 
+if (!process.env.ATLAS_URI) {
+  process.exit(1);
+}
+const uri: string = process.env.ATLAS_URI;
+
 /**
  *  App Configuration
  */
@@ -24,6 +30,13 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+mongoose
+  .connect(uri)
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((err) => console.log(err.message));
 
 /**
  * Server Activation
