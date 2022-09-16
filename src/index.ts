@@ -31,6 +31,7 @@ const uri: string = process.env.ATLAS_URI;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/post", postRouter);
 
