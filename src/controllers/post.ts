@@ -1,14 +1,6 @@
 import { Request, Response } from "express";
 import Post from "../models/post";
-
-const catchBlock = (e: unknown, res: Response) => {
-  if (e instanceof Error) {
-    console.log(e.message);
-  } else {
-    console.log("Unexpected error", e);
-  }
-  res.status(500).send;
-};
+import catchBlock from "../utils/catchBlock";
 
 const PostController = {
   New: async (req: Request, res: Response) => {
