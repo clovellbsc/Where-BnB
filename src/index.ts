@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import postRouter from "./routes/post";
+import userRouter from "./routes/user";
 
 dotenv.config();
 
@@ -19,10 +20,10 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 
-if (!process.env.ATLAS_URI) {
+if (!process.env.URI) {
   process.exit(1);
 }
-const uri: string = process.env.ATLAS_URI;
+const uri: string = process.env.URI;
 
 /**
  *  App Configuration
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/post", postRouter);
+app.use("/user", userRouter);
 
 mongoose
   .connect(uri)
