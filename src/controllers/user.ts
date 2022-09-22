@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchBlock from "../utils/catchBlock";
 import userSchema from "../models/user";
 import bcrypt from "bcrypt";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 const User = {
   get: async (req: Request, res: Response) => {
@@ -31,9 +32,22 @@ const User = {
     if (foundUser === null) {
       return res.status(400).send();
     }
+    const {
+      _id,
+      username: foundUsername,
+      email: foundEmail,
+      password: foundPassword,
+    } = foundUser;
     try {
       if (await bcrypt.compare(password, foundUser.password)) {
-        res.send("Success");
+        const token = jwt.sign(
+          { _id: _id.toString(), username: foundUsername },
+          process.env.ACCESS_TOKEN,
+          {
+            expiresIn: "2 days",
+          }
+        );
+        res.status(200).send({ user: { _id, foundUsername }, token: token });
       } else {
         res.send("Incorrect email or password");
       }
