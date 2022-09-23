@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import catchBlock from "../utils/catchBlock";
 import userSchema from "../models/user";
 import bcrypt from "bcrypt";
-import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const User = {
   get: async (req: Request, res: Response) => {
@@ -27,19 +27,14 @@ const User = {
     }
   },
   Login: async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
-    const foundUser = await userSchema.findOne({ username: req.body.username });
+    const { username, password } = req.body;
+    const foundUser = await userSchema.findOne({ username: username });
     if (foundUser === null) {
       return res.status(400).send();
     }
-    const {
-      _id,
-      username: foundUsername,
-      email: foundEmail,
-      password: foundPassword,
-    } = foundUser;
+    const { _id, username: foundUsername, password: foundPassword } = foundUser;
     try {
-      if (await bcrypt.compare(password, foundUser.password)) {
+      if (await bcrypt.compare(password, foundPassword)) {
         const token = jwt.sign(
           { _id: _id.toString(), username: foundUsername },
           process.env.ACCESS_TOKEN,
@@ -52,6 +47,16 @@ const User = {
         res.send("Incorrect email or password");
       }
       res.status(200).send(foundUser);
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
+  Delete: async (req: Request, res: Response) => {
+    const userID = req.token._id;
+    await userSchema.deleteOne({ _id: userID });
+
+    try {
+      res.send(`Deleted successfully`);
     } catch (e: unknown) {
       catchBlock(e, res);
     }

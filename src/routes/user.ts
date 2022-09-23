@@ -5,6 +5,7 @@ const userRouter = express.Router();
 
 userRouter.post("/login", UserController.Login);
 userRouter.post("/register", UserController.Register);
+userRouter.post("/delete", auth, UserController.Delete);
 userRouter.get("/", auth, UserController.get);
 
 export default userRouter;
