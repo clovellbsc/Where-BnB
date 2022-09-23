@@ -5,6 +5,7 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 import postRouter from "./routes/post";
 import userRouter from "./routes/user";
+import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
+app.use("/accommodation", auth, accommodationRouter);
 
 mongoose
   .connect(uri)
