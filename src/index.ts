@@ -7,6 +7,7 @@ import postRouter from "./routes/post";
 import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
+import multer from "multer";
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ const uri: string = process.env.URI;
  *  App Configuration
  */
 
+const upload = multer({ dest: "uploads" });
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -39,6 +42,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
 app.use("/accommodation", auth, accommodationRouter);
+app.post("/upload", upload.array("file", 5), (req, res) => {
+  console.log(req.files);
+  res.send("successful");
+});
 
 mongoose
   .connect(uri)
