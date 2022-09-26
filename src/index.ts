@@ -7,8 +7,9 @@ import postRouter from "./routes/post";
 import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import { v4 as uuid } from "uuid";
+import catchBlock from "./utils/catchBlock";
 
 dotenv.config();
 
@@ -33,6 +34,17 @@ const uri: string = process.env.URI;
  *  App Configuration
  */
 
+interface File {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -43,7 +55,19 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  if (file.mimetype.split("/")[0] === "image") {
+    cb(null, true);
+  } else {
+    cb(new Error("Wrong file type added"));
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 app.use(helmet());
 app.use(cors());
