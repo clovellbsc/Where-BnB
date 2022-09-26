@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import mongoose from "mongoose";
@@ -7,7 +7,7 @@ import postRouter from "./routes/post";
 import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
-import multer, { FileFilterCallback } from "multer";
+import multer, { FileFilterCallback, MulterError } from "multer";
 import { v4 as uuid } from "uuid";
 import catchBlock from "./utils/catchBlock";
 
@@ -29,10 +29,6 @@ if (!process.env.URI) {
   process.exit(1);
 }
 const uri: string = process.env.URI;
-
-/**
- *  App Configuration
- */
 
 interface File {
   fieldname: string;
@@ -63,11 +59,19 @@ const fileFilter = (
   if (file.mimetype.split("/")[0] === "image") {
     cb(null, true);
   } else {
-    cb(new Error("Wrong file type added"));
+    cb(new MulterError("LIMIT_UNEXPECTED_FILE"));
   }
 };
 
-const upload = multer({ storage, fileFilter });
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 1000000, files: 5 },
+});
+
+/**
+ *  App Configuration
+ */
 
 app.use(helmet());
 app.use(cors());
@@ -80,6 +84,28 @@ app.use("/accommodation", auth, accommodationRouter);
 app.post("/upload", upload.array("file", 5), (req, res) => {
   console.log(req.files);
   res.send("successful");
+});
+
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        message: "File is too large",
+      });
+    }
+    if (error.code === "LIMIT_FILE_COUNT") {
+      return res.status(400).json({
+        message: "File limit reached",
+      });
+    }
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.status(400).json({
+        message: "File must be an image",
+      });
+    }
+  }
+  console.log(MulterError);
+  next();
 });
 
 mongoose
