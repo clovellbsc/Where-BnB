@@ -8,6 +8,7 @@ import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
 import multer from "multer";
+import { v4 as uuid } from "uuid";
 
 dotenv.config();
 
@@ -32,7 +33,17 @@ const uri: string = process.env.URI;
  *  App Configuration
  */
 
-const upload = multer({ dest: "uploads" });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    const { originalname } = file;
+    cb(null, `${uuid()}-${originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 app.use(helmet());
 app.use(cors());
