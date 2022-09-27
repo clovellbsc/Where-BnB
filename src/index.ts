@@ -8,8 +8,7 @@ import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
 import multer, { FileFilterCallback, MulterError } from "multer";
-import { v4 as uuid } from "uuid";
-import catchBlock from "./utils/catchBlock";
+import { s3Uploadv2 } from "./s3Service";
 
 dotenv.config();
 
@@ -30,26 +29,7 @@ if (!process.env.URI) {
 }
 const uri: string = process.env.URI;
 
-interface File {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  destination: string;
-  filename: string;
-  path: string;
-  size: number;
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    const { originalname } = file;
-    cb(null, `${uuid()}-${originalname}`);
-  },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (
   req: Request,
@@ -81,9 +61,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
 app.use("/accommodation", auth, accommodationRouter);
-app.post("/upload", upload.array("file", 5), (req, res) => {
-  console.log(req.files);
-  res.send("successful");
+app.post("/upload", upload.array("file", 5), async (req, res) => {
+  const file: Express.Multer.File = req.files[0];
+  const result = await s3Uploadv2(file);
+  res.send({ success: "successful", result });
 });
 
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
@@ -104,7 +85,6 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
       });
     }
   }
-  console.log(MulterError);
   next();
 });
 
