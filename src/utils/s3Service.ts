@@ -7,12 +7,19 @@ export interface Param {
   Body: Buffer;
 }
 
-export const s3Uploadv2 = async (file: Express.Multer.File) => {
+export const s3Uploadv2 = async (files: Express.Multer.File[]) => {
   const s3 = new S3();
-  const param: Param = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `uploads/${uuid()}-${file.originalname}`,
-    Body: file.buffer,
-  };
-  return await s3.upload(param).promise();
+  const params: Param[] = files.map((file) => {
+    return {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `uploads/${uuid()}-${file.originalname}`,
+      Body: file.buffer,
+    };
+  });
+
+  const results = await Promise.all(
+    params.map((param) => s3.upload(param).promise())
+  );
+
+  return results;
 };
