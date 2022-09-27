@@ -8,7 +8,8 @@ import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
 import multer, { FileFilterCallback, MulterError } from "multer";
-import { s3Uploadv2 } from "./s3Service";
+import { s3Uploadv2 } from "./utils/s3Service";
+import catchBlock from "./utils/catchBlock";
 
 dotenv.config();
 
@@ -62,9 +63,13 @@ app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
 app.use("/accommodation", auth, accommodationRouter);
 app.post("/upload", upload.array("file", 5), async (req, res) => {
-  const file: Express.Multer.File = req.files[0];
-  const result = await s3Uploadv2(file);
-  res.send({ success: "successful", result });
+  const files = req.files as Express.Multer.File[];
+  try {
+    const results = await s3Uploadv2(files);
+    res.send({ success: "successful", results });
+  } catch (e: unknown) {
+    catchBlock(e, res);
+  }
 });
 
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
