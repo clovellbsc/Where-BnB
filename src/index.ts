@@ -10,6 +10,7 @@ import { auth } from "./utils/auth";
 import multer, { FileFilterCallback, MulterError } from "multer";
 import { s3Uploadv2 } from "./utils/s3Service";
 import catchBlock from "./utils/catchBlock";
+import uploadRouter from "./routes/upload";
 
 dotenv.config();
 
@@ -30,26 +31,6 @@ if (!process.env.URI) {
 }
 const uri: string = process.env.URI;
 
-const storage = multer.memoryStorage();
-
-const fileFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: FileFilterCallback
-) => {
-  if (file.mimetype.split("/")[0] === "image") {
-    cb(null, true);
-  } else {
-    cb(new MulterError("LIMIT_UNEXPECTED_FILE"));
-  }
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 1000000, files: 5 },
-});
-
 /**
  *  App Configuration
  */
@@ -62,15 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
 app.use("/accommodation", auth, accommodationRouter);
-app.post("/upload", upload.array("file", 5), async (req, res) => {
-  const files = req.files as Express.Multer.File[];
-  try {
-    const results = await s3Uploadv2(files);
-    res.send({ success: "successful", results });
-  } catch (e: unknown) {
-    catchBlock(e, res);
-  }
-});
+app.use("/upload", uploadRouter);
 
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof MulterError) {
