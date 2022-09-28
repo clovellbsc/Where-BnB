@@ -11,5 +11,6 @@ accommodationRouter.get(
   "/users-accommodation",
   AccommodationController.UsersAccommodation
 );
+accommodationRouter.post("/delete", AccommodationController.Delete);
 
 export default accommodationRouter;

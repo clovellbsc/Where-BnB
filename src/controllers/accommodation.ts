@@ -49,6 +49,21 @@ const AccommodationController = {
       catchBlock(e, res);
     }
   },
+  Delete: async (req: Request, res: Response) => {
+    const accommodationID = req.body.accommodation;
+    try {
+      const accommodation = await accommodationSchema.findByIdAndRemove({
+        _id: accommodationID,
+      });
+
+      res.send({
+        success: "Successfully deleted",
+        accommodation: accommodation,
+      });
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
 };
 
 export default AccommodationController;
