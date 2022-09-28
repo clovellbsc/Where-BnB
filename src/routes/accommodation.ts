@@ -7,6 +7,9 @@ accommodationRouter.post(
   "/create",
   AccommodationController.CreateAccommodation
 );
-accommodationRouter.get("/users-accommodation", AccommodationController.All);
+accommodationRouter.get(
+  "/users-accommodation",
+  AccommodationController.UsersAccommodation
+);
 
 export default accommodationRouter;

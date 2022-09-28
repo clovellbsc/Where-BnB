@@ -5,7 +5,7 @@ import accommodationSchema from "../models/accommodation";
 const AccommodationController = {
   All: async (req: Request, res: Response) => {
     try {
-      const accomodationArray = accommodationSchema.find().limit(50);
+      const accomodationArray = await accommodationSchema.find().limit(50);
 
       res
         .status(200)
@@ -40,7 +40,9 @@ const AccommodationController = {
   UsersAccommodation: async (req: Request, res: Response) => {
     try {
       const userID = req.body.user;
-      const accomodationArray = accommodationSchema.find({ user: userID });
+      const accomodationArray = await accommodationSchema.find({
+        user: userID,
+      });
 
       res.send({ success: "Successful", accommodation: accomodationArray });
     } catch (e: unknown) {
