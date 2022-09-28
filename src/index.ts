@@ -7,9 +7,7 @@ import postRouter from "./routes/post";
 import userRouter from "./routes/user";
 import accommodationRouter from "./routes/accommodation";
 import { auth } from "./utils/auth";
-import multer, { FileFilterCallback, MulterError } from "multer";
-import { s3Uploadv2 } from "./utils/s3Service";
-import catchBlock from "./utils/catchBlock";
+import { MulterError } from "multer";
 import uploadRouter from "./routes/upload";
 
 dotenv.config();
@@ -43,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
 app.use("/accommodation", auth, accommodationRouter);
-app.use("/upload", uploadRouter);
+app.use("/upload", auth, uploadRouter);
 
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof MulterError) {
