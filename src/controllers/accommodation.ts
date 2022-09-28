@@ -37,6 +37,16 @@ const AccommodationController = {
       catchBlock(e, res);
     }
   },
+  UsersAccommodation: async (req: Request, res: Response) => {
+    try {
+      const userID = req.body.user;
+      const accomodationArray = accommodationSchema.find({ user: userID });
+
+      res.send({ success: "Successful", accommodation: accomodationArray });
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
 };
 
 export default AccommodationController;
