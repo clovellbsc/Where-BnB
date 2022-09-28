@@ -50,7 +50,7 @@ const AccommodationController = {
     }
   },
   Delete: async (req: Request, res: Response) => {
-    const accommodationID = req.body.accommodation;
+    const accommodationID = req.params.id;
     try {
       const accommodation = await accommodationSchema.findByIdAndRemove({
         _id: accommodationID,
