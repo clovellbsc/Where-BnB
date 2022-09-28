@@ -1,16 +1,10 @@
 # Backend App (Name TBC)
 
-### What is the project?
+### What is the project and what are my motivations for making it?
 
 This project started without much direction, trying to develop my TypeScript and NodeJs skills trying to utilise new technologies. It has developed into creating an AirBnb style website as an addition to my portfolio. The end goal now is to create a fullstack-application to develop a well rounded knowledge of full lifecycle development, as well as learning as much as possible!
 
-I have decided to do this project into TypeScript, both for a new challenge and also to utilise a popular language where I can learn to understand
-
-### Project Motivation
-
-This project is a learning and development project for myself to adapt to new technologies and adding additional skills to my backend work. I decided to create a NodeJs backend application to further develop my full stack ability.
-
-I am utilising TypeScript to develop my TypeScript skills.
+I have decided to do this project into TypeScript, both for a new challenge and also to utilise a popular language where I can learn to understand a strongly typed language.
 
 ### Technologies used
 
