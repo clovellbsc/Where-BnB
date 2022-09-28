@@ -14,6 +14,29 @@ const AccommodationController = {
       catchBlock(e, res);
     }
   },
+  CreateAccommodation: async (req: Request, res: Response) => {
+    try {
+      const userID = req.body.token._id;
+      const { name, location, photos, pricePerNight, noOfGuests, noOfBaths } =
+        req.body;
+
+      const accommodation = await accommodationSchema.create({
+        name: name,
+        location: location,
+        photos: photos,
+        pricePerNight: pricePerNight,
+        noOfGuests: noOfGuests,
+        noOfBaths: noOfBaths,
+        owner: userID,
+      });
+
+      res
+        .status(200)
+        .send({ success: "successful", accommodation: accommodation });
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
 };
 
 export default AccommodationController;
