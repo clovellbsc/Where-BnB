@@ -52,7 +52,7 @@ const User = {
     }
   },
   Delete: async (req: Request, res: Response) => {
-    const userID = req.token._id;
+    const userID = req.body.token._id;
     await userSchema.deleteOne({ _id: userID });
 
     try {

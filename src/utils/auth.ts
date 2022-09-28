@@ -11,11 +11,11 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
       req.header && req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      return res.sendStatus(400);
+      return res.status(400).send("You are not authorised, please log in");
     }
 
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
-    (req as CustomRequest).token = decoded;
+    (req as CustomRequest).body.token = decoded;
 
     next();
   } catch (err) {
