@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 interface IAccommodation {
   name: string;
   location: string;
-  photos: [type: Schema.Types.ObjectId];
+  photos: string[];
   owner: Schema.Types.ObjectId;
   pricePerNight: number;
   noOfGuests: Number;
@@ -19,12 +19,7 @@ const AccommodationSchema = new Schema({
     type: String,
     required: true,
   },
-  photos: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "File",
-    },
-  ],
+  photos: [{ type: String }],
   pricePerNight: {
     type: Number,
     required: true,
@@ -36,6 +31,10 @@ const AccommodationSchema = new Schema({
   noOfBaths: {
     type: Number,
     required: true,
+  },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 
