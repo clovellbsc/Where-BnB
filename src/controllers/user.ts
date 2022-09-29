@@ -3,6 +3,7 @@ import catchBlock from "../utils/catchBlock";
 import userSchema from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { s3Uploadv2 } from "../utils/s3Service";
 
 const User = {
   get: async (req: Request, res: Response) => {
@@ -46,7 +47,6 @@ const User = {
       } else {
         res.send("Incorrect email or password");
       }
-      res.status(200).send(foundUser);
     } catch (e: unknown) {
       catchBlock(e, res);
     }
@@ -57,6 +57,21 @@ const User = {
 
     try {
       res.send(`Deleted successfully`);
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
+  UploadAvatar: async (req: Request, res: Response) => {
+    const userID = req.body.token._id;
+
+    const files = req.files as Express.Multer.File[];
+
+    try {
+      const results = await s3Uploadv2(files);
+      await userSchema.findByIdAndUpdate(userID, {
+        avatar: results[0].Location,
+      });
+      res.send({ success: "successful" });
     } catch (e: unknown) {
       catchBlock(e, res);
     }
