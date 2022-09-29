@@ -15,8 +15,14 @@ const fileFilter = (
   }
 };
 
-export const upload = multer({
+export const uploadUpTo5Images = multer({
   storage,
   fileFilter,
   limits: { fileSize: 1000000, files: 5 },
+});
+
+export const upload1Image = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 500000, files: 1 },
 });
