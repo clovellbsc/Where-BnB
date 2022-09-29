@@ -1,6 +1,6 @@
 import express from "express";
 import AccommodationController from "../controllers/accommodation";
-import { upload } from "../utils/multer";
+import { uploadUpTo5Images } from "../utils/multer";
 const accommodationRouter = express.Router();
 
 accommodationRouter.get("/", AccommodationController.All);
@@ -15,7 +15,7 @@ accommodationRouter.get(
 accommodationRouter.post("/delete/:id", AccommodationController.Delete);
 accommodationRouter.post(
   "/upload/:id",
-  upload.array("file", 5),
+  uploadUpTo5Images.array("file", 5),
   AccommodationController.UploadImages
 );
 
