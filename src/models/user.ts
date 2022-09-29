@@ -4,6 +4,7 @@ interface IUser {
   username: string;
   email: string;
   password: string;
+  avatar: string;
 }
 
 const userSchema: Schema = new Schema({
@@ -21,6 +22,7 @@ const userSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  avatar: String,
 });
 
 const User = model<IUser>("User", userSchema);
