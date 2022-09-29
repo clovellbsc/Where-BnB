@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchBlock from "../utils/catchBlock";
 import accommodationSchema from "../models/accommodation";
 import { s3Uploadv2 } from "../utils/s3Service";
+import { Schema } from "mongoose";
 
 const AccommodationController = {
   All: async (req: Request, res: Response) => {
@@ -40,7 +41,7 @@ const AccommodationController = {
   },
   UsersAccommodation: async (req: Request, res: Response) => {
     try {
-      const userID = req.body.user;
+      const userID = req.body.token._id;
       const accomodationArray = await accommodationSchema.find({
         user: userID,
       });
@@ -51,10 +52,18 @@ const AccommodationController = {
     }
   },
   Delete: async (req: Request, res: Response) => {
-    const accommodationID = req.params.id;
+    const accommodationId = req.params.id;
+    const userId = req.body.token._id;
+    if (
+      accommodationId !== typeof Schema.Types.ObjectId ||
+      userId !== typeof Schema.Types.ObjectId
+    ) {
+      return res.status(404).send("Accommodation not found");
+    }
     try {
       const accommodation = await accommodationSchema.findByIdAndRemove({
-        _id: accommodationID,
+        _id: accommodationId,
+        owner: userId,
       });
 
       res.send({
@@ -67,14 +76,22 @@ const AccommodationController = {
   },
   UploadImages: async (req: Request, res: Response) => {
     const accommodationId = req.params.id;
+    const userId = req.body.token._id;
+    if (
+      accommodationId !== typeof Schema.Types.ObjectId ||
+      userId !== typeof Schema.Types.ObjectId
+    ) {
+      return res.status(404).send("Accommodation not found");
+    }
     const accommodation = await accommodationSchema.findOne({
       _id: accommodationId,
+      owner: userId,
     });
+
     const files = req.files as Express.Multer.File[];
 
     try {
       const results = await s3Uploadv2(files);
-      console.log(results);
       if (accommodation) {
         results.forEach((file) => accommodation.photos.push(file.Location));
         await accommodation.save();
