@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import catchBlock from "../utils/catchBlock";
 import accommodationSchema from "../models/accommodation";
+import { s3Uploadv2 } from "../utils/s3Service";
 
 const AccommodationController = {
   All: async (req: Request, res: Response) => {
@@ -60,6 +61,28 @@ const AccommodationController = {
         success: "Successfully deleted",
         accommodation: accommodation,
       });
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
+  UploadImages: async (req: Request, res: Response) => {
+    const accommodationId = req.params.id;
+    const accommodation = await accommodationSchema.findOne({
+      _id: accommodationId,
+    });
+    const files = req.files as Express.Multer.File[];
+
+    try {
+      const results = await s3Uploadv2(files);
+      console.log(results);
+      if (accommodation) {
+        results.forEach((file) => accommodation.photos.push(file.Location));
+        await accommodation.save();
+        res.send({ success: "successful", accommodation });
+      } else {
+        res.status(400).send("No such accommodation");
+      }
+      res.send({ success: "successful", results });
     } catch (e: unknown) {
       catchBlock(e, res);
     }
