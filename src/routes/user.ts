@@ -15,5 +15,6 @@ userRouter.post(
   UserController.UploadAvatar
 );
 userRouter.post("/forgot-password", UserController.ForgotPassword);
+userRouter.post("/reset-password/:id/:token", UserController.ResetPassword);
 
 export default userRouter;
