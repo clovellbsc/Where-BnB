@@ -76,6 +76,29 @@ const User = {
       catchBlock(e, res);
     }
   },
+  ForgotPassword: async (req: Request, res: Response) => {
+    try {
+      const user = await userSchema.findOne({ email: req.body.email });
+
+      if (user) {
+        const secret = process.env.ACCESS_TOKEN + user.password;
+        const payload = {
+          email: user.email,
+          id: user._id,
+        };
+        const token = jwt.sign(payload, secret, { expiresIn: "15m" });
+        const link = `http://localhost:${process.env.PORT}/user/reset-password/${user._id}/${token}`;
+
+        console.log(link, token);
+
+        // Add in logic for sending the link via email to user here
+
+        res.status(200).send("Password reset link has been sent to your email");
+      } else {
+        res.status(404).send("User not found!");
+      }
+    } catch (e: unknown) {}
+  },
 };
 
 export default User;
