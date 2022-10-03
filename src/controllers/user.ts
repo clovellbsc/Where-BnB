@@ -99,6 +99,31 @@ const User = {
       }
     } catch (e: unknown) {}
   },
+  ResetPassword: async (req: Request, res: Response) => {
+    const { id: userID, token } = req.params;
+
+    try {
+      const user = await userSchema.findOne({ _id: userID });
+      const password = req.body.password;
+      console.log(`user ${user}`);
+      if (user) {
+        const secret = process.env.ACCESS_TOKEN + user.password;
+        const payload = jwt.verify(token, secret);
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        user.password = hashedPassword;
+
+        user.save();
+
+        res.status(200).send({ email: user.email });
+      } else {
+        res.status(404).send("User not found!");
+      }
+    } catch (e: unknown) {
+      catchBlock(e, res);
+    }
+  },
 };
 
 export default User;
