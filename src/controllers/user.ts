@@ -4,6 +4,8 @@ import userSchema from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { s3Uploadv2 } from "../utils/s3Service";
+import { sendMail } from "../utils/nodemailer";
+import { emailTemplate } from "../utils/email";
 
 const User = {
   get: async (req: Request, res: Response) => {
@@ -89,9 +91,16 @@ const User = {
         const token = jwt.sign(payload, secret, { expiresIn: "15m" });
         const link = `http://localhost:${process.env.PORT}/user/reset-password/${user._id}/${token}`;
 
-        console.log(link, token);
+        const email = emailTemplate(link);
 
-        // Add in logic for sending the link via email to user here
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: process.env.EMAIL,
+          subject: "Password Reset",
+          html: email,
+        };
+
+        sendMail(mailOptions);
 
         res.status(200).send("Password reset link has been sent to your email");
       } else {
