@@ -13,6 +13,8 @@ declare global {
       AWS_SECRET_ACCESS_KEY: Secret;
       AWS_REGION: string;
       AWS_BUCKET_NAME: string;
+      EMAIL: string;
+      GOOGLE_GENERATED_PASSWORD: string;
     }
   }
 }
