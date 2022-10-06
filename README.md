@@ -6,7 +6,7 @@ This project started without much direction, trying to develop my TypeScript and
 
 I have decided to do this project into TypeScript, both for a new challenge and also to utilise a popular language where I can learn to understand a strongly typed language.
 
-### Technologies used
+### Backend Technologies used
 
 - [NodeJs](https://nodejs.org/en/) - Node. js (Node) is an open source development platform for executing JavaScript code server-side.
 - [TypeScript](https://www.typescriptlang.org/) - TypeScript is a strongly typed programming language that builds on JavaScript.
@@ -20,3 +20,4 @@ I have decided to do this project into TypeScript, both for a new challenge and 
 - [bcrypt](https://www.npmjs.com/package/bcrypt) - bcrypt is a password-hashing function
 - [dotenv](https://www.npmjs.com/package/dotenv) - Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 - [uuid](https://www.npmjs.com/package/uuid) - For the creation of RFC4122 UUIDs.
+- [Nodemailer](https://nodemailer.com/about/) - Nodemailer is a module for Node.js applications to allow easy as cake email sending.
