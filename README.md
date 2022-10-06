@@ -1,4 +1,4 @@
-# Backend App (Name TBC)
+# Where BnB
 
 ### What is the project and what are my motivations for making it?
 
