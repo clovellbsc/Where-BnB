@@ -1,4 +1,4 @@
-# Backend App (Name TBC)
+# Where BnB
 
 ### What is the project and what are my motivations for making it?
 
@@ -6,7 +6,7 @@ This project started without much direction, trying to develop my TypeScript and
 
 I have decided to do this project into TypeScript, both for a new challenge and also to utilise a popular language where I can learn to understand a strongly typed language.
 
-### Technologies used
+### Backend Technologies used
 
 - [NodeJs](https://nodejs.org/en/) - Node. js (Node) is an open source development platform for executing JavaScript code server-side.
 - [TypeScript](https://www.typescriptlang.org/) - TypeScript is a strongly typed programming language that builds on JavaScript.
@@ -17,6 +17,8 @@ I have decided to do this project into TypeScript, both for a new challenge and 
 - [Multer](https://www.npmjs.com/package/multer) - Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
 - [JsonWebToken](https://jwt.io/) - An implementation for Json Web Tokens.
 - [AWS SDK](https://aws.amazon.com/sdk-for-javascript/) - AWS SDK (software development kit) helps simplify your coding by providing JavaScript objects for AWS services.
+- [AWS S3](https://aws.amazon.com/s3/) - Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services that provides object storage through a web service interface.
 - [bcrypt](https://www.npmjs.com/package/bcrypt) - bcrypt is a password-hashing function
 - [dotenv](https://www.npmjs.com/package/dotenv) - Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 - [uuid](https://www.npmjs.com/package/uuid) - For the creation of RFC4122 UUIDs.
+- [Nodemailer](https://nodemailer.com/about/) - Nodemailer is a module for Node.js applications to allow easy as cake email sending.
