@@ -1,13 +1,19 @@
 import { Request, Response } from "express";
 import catchBlock from "../utils/catchBlock";
-import accommodationSchema from "../models/accommodation";
+import accommodationSchema, { IAccommodation } from "../models/accommodation";
 import { s3Uploadv2 } from "../utils/s3Service";
 import { Schema } from "mongoose";
 
 const AccommodationController = {
   All: async (req: Request, res: Response) => {
     try {
-      const accomodationArray = await accommodationSchema.find().limit(50);
+      const accomodationArray: IAccommodation[] = await accommodationSchema
+        .find()
+        .populate({
+          path: "owner",
+          select: ["username", "avatar"],
+        })
+        .limit(50);
 
       res
         .status(200)
@@ -19,8 +25,15 @@ const AccommodationController = {
   CreateAccommodation: async (req: Request, res: Response) => {
     try {
       const userID = req.body.token._id;
-      const { name, location, photos, pricePerNight, noOfGuests, noOfBaths } =
-        req.body;
+      const {
+        name,
+        location,
+        photos,
+        pricePerNight,
+        noOfGuests,
+        noOfBaths,
+        description,
+      } = req.body;
 
       const accommodation = await accommodationSchema.create({
         name: name,
@@ -30,6 +43,7 @@ const AccommodationController = {
         noOfGuests: noOfGuests,
         noOfBaths: noOfBaths,
         owner: userID,
+        description: description,
       });
 
       res
@@ -42,9 +56,10 @@ const AccommodationController = {
   UsersAccommodation: async (req: Request, res: Response) => {
     try {
       const userID = req.body.token._id;
-      const accomodationArray = await accommodationSchema.find({
-        user: userID,
-      });
+      const accomodationArray: IAccommodation[] =
+        await accommodationSchema.find({
+          user: userID,
+        });
 
       res.send({ success: "Successful", accommodation: accomodationArray });
     } catch (e: unknown) {
@@ -61,10 +76,11 @@ const AccommodationController = {
       return res.status(404).send("Accommodation not found");
     }
     try {
-      const accommodation = await accommodationSchema.findByIdAndRemove({
-        _id: accommodationId,
-        owner: userId,
-      });
+      const accommodation: IAccommodation | null =
+        await accommodationSchema.findByIdAndRemove({
+          _id: accommodationId,
+          owner: userId,
+        });
 
       res.send({
         success: "Successfully deleted",
@@ -83,10 +99,11 @@ const AccommodationController = {
     ) {
       return res.status(404).send("Accommodation not found");
     }
-    const accommodation = await accommodationSchema.findOne({
-      _id: accommodationId,
-      owner: userId,
-    });
+    const accommodation: IAccommodation | null =
+      await accommodationSchema.findOne({
+        _id: accommodationId,
+        owner: userId,
+      });
 
     const files = req.files as Express.Multer.File[];
 
