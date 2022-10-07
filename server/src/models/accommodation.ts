@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-interface IAccommodation {
+export interface IAccommodation extends Document {
   name: string;
   location: string;
   photos: string[];
@@ -8,6 +8,7 @@ interface IAccommodation {
   pricePerNight: number;
   noOfGuests: Number;
   noOfBaths: Number;
+  description: string;
 }
 
 const AccommodationSchema = new Schema({
@@ -37,6 +38,7 @@ const AccommodationSchema = new Schema({
     ref: "User",
     req: true,
   },
+  description: String,
 });
 
 const Accommodation = model<IAccommodation>(
