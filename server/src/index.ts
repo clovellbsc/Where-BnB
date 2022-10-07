@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/post", auth, postRouter);
 app.use("/user", userRouter);
-app.use("/accommodation", auth, accommodationRouter);
+app.use("/accommodation", accommodationRouter);
 app.use("/upload", auth, uploadRouter);
 
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
