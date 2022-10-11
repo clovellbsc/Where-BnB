@@ -13,3 +13,11 @@ interface IAccommodation {
 interface AccommodationProps {
   accommodation: IAccommodation;
 }
+
+interface CarouselProps {
+  photos: string[];
+}
+
+interface CarouselItemProps {
+  photo: string;
+}
