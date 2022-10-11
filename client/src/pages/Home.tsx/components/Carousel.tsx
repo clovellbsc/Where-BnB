@@ -1,4 +1,3 @@
-import { CarouselProps } from "../../../types";
 import CarouselItem from "./CarouselItem";
 
 const Carousel = ({ photos }: CarouselProps) => {

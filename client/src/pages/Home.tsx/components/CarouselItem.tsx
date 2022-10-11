@@ -1,5 +1,3 @@
-import { CarouselItemProps } from "../../../types";
-
 const CarouselItem = ({ photo }: CarouselItemProps) => {
   return (
     <div>
