@@ -1,37 +1,32 @@
-const Accommodation = ({ accommodation }: AccommodationProps) => {
-  const {
-    name,
-    location,
-    photos,
-    owner,
-    description,
-    pricePerNight,
-    noOfGuests,
-    noOfBaths,
-  } = accommodation;
+import "./accommodationStyle.css";
+import { ReactComponent as Star } from "../../../../src/star-full-icon.svg";
+
+const AccommodationSnippet = ({ accommodation }: AccommodationProps) => {
+  const { _id, location, photos, owner, pricePerNight } = accommodation;
 
   return (
-    <div>
-      {photos.length && <div></div>}
-      <div>
-        <h1>{name}</h1>
-        <h4>{location}</h4>
-        <div>
-          <p>{owner.username}</p>
-          <img src={owner.avatar} alt={`${owner.username}'s avatar'`} />
+    <a href={`/${_id}`}>
+      <div className="container">
+        <div className="image-container">
+          {!!photos.length && <img src={photos[0]} alt="" />}
         </div>
+        <main className="body">
+          <div className="info">
+            <p className="bold">{location}</p>
+            <p className="dim">{owner.username}</p>
+            <p className="underlined">
+              <span className="bold">£{pricePerNight}</span> per night
+            </p>
+          </div>
+          <div className="rating">
+            <p>
+              <Star style={{ height: "0.75rem", width: "0.75rem" }} /> 5.00
+            </p>
+          </div>
+        </main>
       </div>
-      <div>
-        <h4>Price Per Night: {pricePerNight}</h4>
-        <h4>Number of Guests {noOfGuests}</h4>
-        <h4>Number of Bathrooms {noOfBaths}</h4>
-      </div>
-      <div>
-        <h3>Description</h3>
-        <p>{description}</p>
-      </div>
-    </div>
+    </a>
   );
 };
 
-export default Accommodation;
+export default AccommodationSnippet;
